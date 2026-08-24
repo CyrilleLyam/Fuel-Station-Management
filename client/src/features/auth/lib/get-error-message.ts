@@ -1,0 +1,12 @@
+import { isAxiosError } from "axios";
+import type { ApiResponse } from "@/lib/api-response";
+
+export function getErrorMessage(error: unknown): string {
+  if (isAxiosError<ApiResponse<unknown>>(error)) {
+    return error.response?.data?.message ?? error.message;
+  }
+  if (error instanceof Error) {
+    return error.message;
+  }
+  return "Something went wrong";
+}
