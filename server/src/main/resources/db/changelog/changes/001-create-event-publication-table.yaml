@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-event-publication-table
+      author: chhengkheang.ly
+      changes:
+        - sql:
+            sql: >
+              create table event_publication (
+                id uuid not null,
+                listener_id varchar(255) not null,
+                event_type varchar(255) not null,
+                serialized_event varchar(255) not null,
+                publication_date timestamp(6) with time zone not null,
+                completion_date timestamp(6) with time zone,
+                last_resubmission_date timestamp(6) with time zone,
+                completion_attempts integer not null,
+                status varchar(255) check (status in ('PUBLISHED','PROCESSING','COMPLETED','FAILED','RESUBMITTED')),
+                primary key (id)
+              );

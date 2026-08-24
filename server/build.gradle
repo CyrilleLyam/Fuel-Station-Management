@@ -1,0 +1,66 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '4.1.1'
+	id 'io.spring.dependency-management' version '1.1.7'
+	id 'io.spring.javaformat' version '0.0.48'
+}
+
+group = 'com.seanglay'
+version = '0.0.1'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(25)
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+ext {
+	set('springModulithVersion', "2.1.0")
+	set('mapstructVersion', "1.6.3")
+	set('springdocVersion', "3.1.0")
+}
+
+dependencies {
+	implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+	annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+	implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springdocVersion}"
+	implementation 'org.springframework.modulith:spring-modulith-starter-core'
+	implementation 'org.springframework.modulith:spring-modulith-starter-jpa'
+	implementation 'org.springframework.boot:spring-boot-liquibase'
+	implementation 'org.liquibase:liquibase-core'
+	runtimeOnly 'org.postgresql:postgresql'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+	if (project.hasProperty('dev')) {
+		testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa-test'
+		testImplementation 'org.springframework.boot:spring-boot-starter-security-test'
+		testImplementation 'org.springframework.boot:spring-boot-starter-validation-test'
+		testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+		testImplementation 'org.springframework.modulith:spring-modulith-starter-test'
+		testAnnotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+		testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	}
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.modulith:spring-modulith-bom:${springModulithVersion}"
+	}
+}
+
+tasks.named('compileTestJava') {
+	onlyIf { project.hasProperty('dev') }
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+	onlyIf { project.hasProperty('dev') }
+}
