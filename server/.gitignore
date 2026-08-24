@@ -1,4 +1,5 @@
 HELP.md
+src/main/resources/db/seed/*.csv
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar

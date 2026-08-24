@@ -46,6 +46,11 @@ class AdminBootstrapRunner implements ApplicationRunner {
 		}
 
 		policyEnforcer.grantPermissionToRole(ADMIN_ROLE, "iam", "admin");
+
+		policyEnforcer.grantPermissionToRole(ADMIN_ROLE, "station", "create");
+		policyEnforcer.grantPermissionToRole(ADMIN_ROLE, "station", "read");
+		policyEnforcer.grantPermissionToRole(ADMIN_ROLE, "station", "update");
+		policyEnforcer.grantPermissionToRole(ADMIN_ROLE, "station", "delete");
 	}
 
 }

@@ -2,14 +2,16 @@ import { useNavigate } from "@tanstack/react-router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CircleAlert, Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useLogin } from "../hooks/use-login";
 import { getErrorMessage } from "../lib/get-error-message";
-import { loginSchema, type LoginCredentials } from "../types/auth";
+import { createLoginSchema, type LoginCredentials } from "../types/auth";
 
 export function LoginForm({ redirectTo }: { redirectTo?: string }) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { mutate, isPending, error } = useLogin();
   const {
@@ -17,7 +19,7 @@ export function LoginForm({ redirectTo }: { redirectTo?: string }) {
     handleSubmit,
     formState: { errors },
   } = useForm<LoginCredentials>({
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(createLoginSchema(t)),
     defaultValues: { username: "", password: "" },
   });
 
@@ -40,7 +42,7 @@ export function LoginForm({ redirectTo }: { redirectTo?: string }) {
           htmlFor="username"
           className="font-jetbrains text-xs tracking-[0.15em] text-muted-foreground uppercase"
         >
-          Username
+          {t("auth.login.username")}
         </label>
         <Input
           id="username"
@@ -58,7 +60,7 @@ export function LoginForm({ redirectTo }: { redirectTo?: string }) {
           htmlFor="password"
           className="font-jetbrains text-xs tracking-[0.15em] text-muted-foreground uppercase"
         >
-          Password
+          {t("auth.login.password")}
         </label>
         <Input
           id="password"
@@ -79,7 +81,9 @@ export function LoginForm({ redirectTo }: { redirectTo?: string }) {
         </Alert>
       )}
       <Button type="submit" disabled={isPending} className="relative mt-2">
-        <span className={isPending ? "invisible" : undefined}>Sign in</span>
+        <span className={isPending ? "invisible" : undefined}>
+          {t("auth.login.submit")}
+        </span>
         {isPending && (
           <Loader2 className="absolute inset-0 m-auto size-4 animate-spin" />
         )}
