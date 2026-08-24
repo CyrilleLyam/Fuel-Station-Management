@@ -27,6 +27,7 @@ ext {
 dependencies {
 	implementation "org.mapstruct:mapstruct:${mapstructVersion}"
 	annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+	implementation 'org.springframework.boot:spring-boot-starter-aspectj'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
@@ -36,6 +37,11 @@ dependencies {
 	implementation 'org.springframework.modulith:spring-modulith-starter-jpa'
 	implementation 'org.springframework.boot:spring-boot-liquibase'
 	implementation 'org.liquibase:liquibase-core'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+	implementation 'org.casbin:jcasbin:1.55.0'
+	implementation 'com.fasterxml.uuid:java-uuid-generator:5.1.0'
+	runtimeOnly 'org.bouncycastle:bcprov-jdk18on:1.81'
+	implementation 'org.casbin:jdbc-adapter:2.7.0'
 	runtimeOnly 'org.postgresql:postgresql'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 

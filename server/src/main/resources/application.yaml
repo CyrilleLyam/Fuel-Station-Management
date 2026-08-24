@@ -25,9 +25,23 @@ spring:
           time_zone: UTC
   jackson:
     time-zone: UTC
+    property-naming-strategy: SNAKE_CASE
   liquibase:
     enabled: true
     change-log: classpath:db/changelog/db.changelog-master.yaml
+
+app:
+  jwt:
+    signing-private-key-path: ${JWT_SIGNING_PRIVATE_KEY_PATH:file:./keys/signing-private.pem}
+    signing-public-key-path: ${JWT_SIGNING_PUBLIC_KEY_PATH:file:./keys/signing-public.pem}
+    encryption-private-key-path: ${JWT_ENCRYPTION_PRIVATE_KEY_PATH:file:./keys/encryption-private.pem}
+    encryption-public-key-path: ${JWT_ENCRYPTION_PUBLIC_KEY_PATH:file:./keys/encryption-public.pem}
+    access-token-ttl: ${JWT_ACCESS_TTL:P1D}
+    refresh-token-ttl: ${JWT_REFRESH_TTL:P7D}
+  admin:
+    username: ${ADMIN_USERNAME:admin}
+    email: ${ADMIN_EMAIL:admin@fuel-station.local}
+    password: ${ADMIN_PASSWORD}
 
 springdoc:
   api-docs:

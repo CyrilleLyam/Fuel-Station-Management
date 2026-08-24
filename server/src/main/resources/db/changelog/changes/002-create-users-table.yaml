@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002-create-users-table
+      author: dev
+      changes:
+        - sql:
+            sql: >
+              create table users (
+                id uuid not null,
+                username varchar(100) not null unique,
+                email varchar(255) not null unique,
+                password varchar(255) not null,
+                enabled boolean not null default true,
+                created_at timestamp(6) with time zone not null,
+                updated_at timestamp(6) with time zone not null,
+                primary key (id)
+              );

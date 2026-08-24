@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-create-casbin-rule-table
+      author: dev
+      changes:
+        - sql:
+            sql: >
+              create sequence casbin_sequence;
+        - sql:
+            sql: >
+              create table casbin_rule (
+                id int not null primary key default nextval('casbin_sequence'),
+                ptype varchar(100) not null,
+                v0 varchar(100),
+                v1 varchar(100),
+                v2 varchar(100),
+                v3 varchar(100),
+                v4 varchar(100),
+                v5 varchar(100)
+              );
