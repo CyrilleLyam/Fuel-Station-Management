@@ -1,8 +1,10 @@
 package com.seanglay.fuelstation.iam.infrastructure;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 import com.seanglay.fuelstation.iam.domain.User;
@@ -15,6 +17,11 @@ class UserRepositoryImpl implements UserRepository {
 
 	UserRepositoryImpl(UserJpaRepository jpaRepository) {
 		this.jpaRepository = jpaRepository;
+	}
+
+	@Override
+	public List<User> findAll() {
+		return jpaRepository.findAll(Sort.by(Sort.Direction.ASC, "username"));
 	}
 
 	@Override

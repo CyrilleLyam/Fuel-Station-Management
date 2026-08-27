@@ -16,4 +16,12 @@ public interface PolicyEnforcer {
 
 	List<String> getRolesForUser(String username);
 
+	List<Permission> getPermissionsForUser(String username);
+
+	List<String> getAllRoles();
+
+	List<String> getUsersForRole(String role);
+
+	List<Permission> getPermissionsForRole(String role);
+
 }

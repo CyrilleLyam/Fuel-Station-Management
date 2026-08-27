@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated.index'
+import { Route as AuthenticatedIamRouteImport } from './routes/_authenticated.iam'
 import { Route as AuthenticatedStationsRouteImport } from './routes/_authenticated.stations'
 
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
@@ -28,6 +29,11 @@ const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedIamRoute = AuthenticatedIamRouteImport.update({
+  id: '/iam',
+  path: '/iam',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedStationsRoute = AuthenticatedStationsRouteImport.update({
   id: '/stations',
   path: '/stations',
@@ -37,10 +43,12 @@ const AuthenticatedStationsRoute = AuthenticatedStationsRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
   '/login': typeof LoginRoute
+  '/iam': typeof AuthenticatedIamRoute
   '/stations': typeof AuthenticatedStationsRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
+  '/iam': typeof AuthenticatedIamRoute
   '/stations': typeof AuthenticatedStationsRoute
   '/': typeof AuthenticatedIndexRoute
 }
@@ -48,18 +56,20 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/login': typeof LoginRoute
+  '/_authenticated/iam': typeof AuthenticatedIamRoute
   '/_authenticated/stations': typeof AuthenticatedStationsRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/stations'
+  fullPaths: '/' | '/login' | '/iam' | '/stations'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/stations' | '/'
+  to: '/login' | '/iam' | '/stations' | '/'
   id:
     | '__root__'
     | '/_authenticated'
     | '/login'
+    | '/_authenticated/iam'
     | '/_authenticated/stations'
     | '/_authenticated/'
   fileRoutesById: FileRoutesById
@@ -92,6 +102,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/iam': {
+      id: '/_authenticated/iam'
+      path: '/iam'
+      fullPath: '/iam'
+      preLoaderRoute: typeof AuthenticatedIamRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/stations': {
       id: '/_authenticated/stations'
       path: '/stations'
@@ -103,11 +120,13 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteChildren {
+  AuthenticatedIamRoute: typeof AuthenticatedIamRoute
   AuthenticatedStationsRoute: typeof AuthenticatedStationsRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedIamRoute: AuthenticatedIamRoute,
   AuthenticatedStationsRoute: AuthenticatedStationsRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
 }

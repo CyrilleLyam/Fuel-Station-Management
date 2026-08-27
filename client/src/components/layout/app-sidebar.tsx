@@ -1,20 +1,28 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Fuel, LayoutDashboard, Receipt, Settings, Users } from "lucide-react";
+import {
+  Fuel,
+  LayoutDashboard,
+  Receipt,
+  Settings,
+  ShieldCheck,
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { LanguageToggle } from "@/components/language-toggle";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useCurrentUser } from "@/features/auth/hooks/use-current-user";
 import { clearTokens } from "@/features/auth/lib/token-storage";
+import { usePermissions } from "@/features/iam/permissions/use-permissions";
 
-const NAV_ITEMS = [
-  { labelKey: "sidebar.dashboard", to: "/" as const, icon: LayoutDashboard },
-  { labelKey: "sidebar.stations", to: "/stations" as const, icon: Fuel },
-];
+interface NavItem {
+  labelKey: string;
+  to: "/" | "/stations" | "/iam";
+  icon: LucideIcon;
+}
 
 const SOON_ITEMS = [
   { labelKey: "sidebar.transactions", icon: Receipt },
-  { labelKey: "sidebar.staff", icon: Users },
   { labelKey: "sidebar.settings", icon: Settings },
 ];
 
@@ -22,6 +30,17 @@ export function AppSidebar() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { data: user } = useCurrentUser();
+  const { can } = usePermissions();
+
+  const navItems: NavItem[] = [
+    { labelKey: "sidebar.dashboard", to: "/", icon: LayoutDashboard },
+  ];
+  if (can("station", "read")) {
+    navItems.push({ labelKey: "sidebar.stations", to: "/stations", icon: Fuel });
+  }
+  if (can("iam", "admin")) {
+    navItems.push({ labelKey: "sidebar.iam", to: "/iam", icon: ShieldCheck });
+  }
 
   function handleLogout() {
     clearTokens();
@@ -40,7 +59,7 @@ export function AppSidebar() {
         </div>
       </div>
       <nav className="flex flex-1 flex-col gap-1 px-3">
-        {NAV_ITEMS.map((item) => (
+        {navItems.map((item) => (
           <Link
             key={item.labelKey}
             to={item.to}

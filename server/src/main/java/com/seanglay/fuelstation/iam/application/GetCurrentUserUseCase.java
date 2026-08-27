@@ -1,5 +1,9 @@
 package com.seanglay.fuelstation.iam.application;
 
+import java.util.List;
+
+import com.seanglay.fuelstation.iam.domain.Permission;
+import com.seanglay.fuelstation.iam.domain.PolicyEnforcer;
 import com.seanglay.fuelstation.iam.domain.User;
 import com.seanglay.fuelstation.iam.domain.UserRepository;
 import com.seanglay.fuelstation.shared.application.UseCase;
@@ -10,11 +14,14 @@ public class GetCurrentUserUseCase {
 
 	private final UserRepository userRepository;
 
-	public GetCurrentUserUseCase(UserRepository userRepository) {
+	private final PolicyEnforcer policyEnforcer;
+
+	public GetCurrentUserUseCase(UserRepository userRepository, PolicyEnforcer policyEnforcer) {
 		this.userRepository = userRepository;
+		this.policyEnforcer = policyEnforcer;
 	}
 
-	public User execute(String username) {
+	public Result execute(String username) {
 		User user = userRepository.findByUsername(username)
 			.orElseThrow(() -> new UnauthorizedException("Unknown user"));
 
@@ -22,7 +29,11 @@ public class GetCurrentUserUseCase {
 			throw new UnauthorizedException("User is disabled");
 		}
 
-		return user;
+		return new Result(user, policyEnforcer.getRolesForUser(username),
+				policyEnforcer.getPermissionsForUser(username));
+	}
+
+	public record Result(User user, List<String> roles, List<Permission> permissions) {
 	}
 
 }

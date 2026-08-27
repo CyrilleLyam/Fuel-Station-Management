@@ -6,6 +6,7 @@ import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { getErrorMessage } from "@/features/auth/lib/get-error-message";
+import { usePermissions } from "@/features/iam/permissions/use-permissions";
 import { useDebouncedValue } from "@/lib/use-debounced-value";
 import { useDeleteStation, useUpdateStation } from "../hooks/use-station-mutations";
 import { useStations } from "../hooks/use-stations";
@@ -18,6 +19,10 @@ const PAGE_SIZE = 10;
 
 export function StationsPage() {
   const { t } = useTranslation();
+  const { can } = usePermissions();
+  const canCreate = can("station", "create");
+  const canUpdate = can("station", "update");
+  const canDelete = can("station", "delete");
   const [page, setPage] = useState(0);
   const [search, setSearch] = useState("");
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -74,6 +79,8 @@ export function StationsPage() {
     onEdit: openEdit,
     onToggleEnabled: toggleEnabled,
     onDelete: remove,
+    canUpdate,
+    canDelete,
   });
 
   const meta = data?.meta;
@@ -89,10 +96,12 @@ export function StationsPage() {
             {t("stations.subtitle")}
           </p>
         </div>
-        <Button onClick={openCreate} className="gap-1.5">
-          <Plus className="size-4" />
-          {t("stations.addStation")}
-        </Button>
+        {canCreate && (
+          <Button onClick={openCreate} className="gap-1.5">
+            <Plus className="size-4" />
+            {t("stations.addStation")}
+          </Button>
+        )}
       </div>
 
       <div className="relative max-w-xs">

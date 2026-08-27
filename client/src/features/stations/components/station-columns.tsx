@@ -12,6 +12,8 @@ export function createStationColumns(
     onEdit: (station: Station) => void;
     onToggleEnabled: (station: Station) => void;
     onDelete: (station: Station) => void;
+    canUpdate: boolean;
+    canDelete: boolean;
   },
 ): ColumnDef<Station, any>[] {
   return [
@@ -52,7 +54,10 @@ export function createStationColumns(
         return (
           <button
             type="button"
-            onClick={() => actions.onToggleEnabled(station)}
+            disabled={!actions.canUpdate}
+            onClick={() =>
+              actions.canUpdate && actions.onToggleEnabled(station)
+            }
             className={
               info.getValue()
                 ? "inline-flex items-center gap-1.5 rounded-full bg-green-50 px-2.5 py-1 text-xs font-medium text-green-700 transition-colors hover:bg-green-100 dark:bg-green-500/10 dark:text-green-400 dark:hover:bg-green-500/15"
@@ -80,22 +85,26 @@ export function createStationColumns(
         const station = info.row.original;
         return (
           <div className="flex justify-end gap-1">
-            <Button
-              variant="ghost"
-              size="icon-sm"
-              onClick={() => actions.onEdit(station)}
-              aria-label={t("stations.actions.edit")}
-            >
-              <Pencil className="size-3.5" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon-sm"
-              onClick={() => actions.onDelete(station)}
-              aria-label={t("stations.actions.delete")}
-            >
-              <Trash2 className="size-3.5" />
-            </Button>
+            {actions.canUpdate && (
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                onClick={() => actions.onEdit(station)}
+                aria-label={t("stations.actions.edit")}
+              >
+                <Pencil className="size-3.5" />
+              </Button>
+            )}
+            {actions.canDelete && (
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                onClick={() => actions.onDelete(station)}
+                aria-label={t("stations.actions.delete")}
+              >
+                <Trash2 className="size-3.5" />
+              </Button>
+            )}
           </div>
         );
       },

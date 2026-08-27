@@ -1,6 +1,8 @@
 import { AxiosError, type InternalAxiosRequestConfig } from "axios";
 import { refreshAccessToken } from "@/features/auth/api/refresh";
 import { clearTokens, getAccessToken } from "@/features/auth/lib/token-storage";
+import i18n from "./i18n";
+import { showToast } from "./toast";
 import { createHttpClient } from "./http-client";
 
 export const api = createHttpClient();
@@ -23,6 +25,10 @@ api.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
     const config = error.config as RetriableConfig | undefined;
+
+    if (error.response?.status === 403) {
+      showToast(i18n.t("errors.accessDenied"));
+    }
 
     if (error.response?.status !== 401 || !config || config._retried) {
       if (error.response?.status === 401) {

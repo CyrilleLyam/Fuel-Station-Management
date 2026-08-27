@@ -4,6 +4,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
 import { ErrorBoundary } from "react-error-boundary";
 import { ErrorFallback } from "@/components/error-fallback";
+import { Toaster } from "@/components/toaster";
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -25,6 +26,7 @@ function RootComponent() {
           >
             <Outlet />
           </ErrorBoundary>
+          <Toaster />
           <TanStackRouterDevtools position="bottom-right" />
           <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-left" />
         </>

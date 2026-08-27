@@ -17,8 +17,15 @@ export interface TokenPair {
   refreshToken: string;
 }
 
+export interface Permission {
+  resource: string;
+  action: string;
+}
+
 export interface CurrentUser {
   id: string;
   username: string;
   email: string;
+  roles: string[];
+  permissions: Permission[];
 }

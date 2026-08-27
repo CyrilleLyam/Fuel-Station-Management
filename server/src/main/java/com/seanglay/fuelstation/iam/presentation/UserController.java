@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.seanglay.fuelstation.iam.application.GetCurrentUserUseCase;
-import com.seanglay.fuelstation.iam.domain.User;
 import com.seanglay.fuelstation.iam.presentation.dto.UserResponse;
 import com.seanglay.fuelstation.shared.presentation.ApiResponse;
 
@@ -22,8 +21,8 @@ class UserController {
 
 	@GetMapping("/me")
 	ApiResponse<UserResponse> me(Authentication authentication) {
-		User user = getCurrentUserUseCase.execute(authentication.getName());
-		return ApiResponse.ok("Current user", new UserResponse(user.getId(), user.getUsername(), user.getEmail()));
+		GetCurrentUserUseCase.Result result = getCurrentUserUseCase.execute(authentication.getName());
+		return ApiResponse.ok("Current user", UserResponse.from(result));
 	}
 
 }
