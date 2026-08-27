@@ -1,0 +1,41 @@
+databaseChangeLog:
+  - changeSet:
+      id: 008-seed-tanks
+      author: dev
+      validCheckSum: ANY
+      changes:
+        - sql:
+            sql: >
+              insert into tanks (station_id, product_id, label, capacity, current_quantity, active, created_at, updated_at)
+              select
+                s.id,
+                p.id,
+                p.name || ' Tank',
+                case p.sku
+                  when 'FUEL-DIESEL' then 50000
+                  when 'FUEL-REGULAR' then 40000
+                  else 30000
+                end,
+                case p.sku
+                  when 'FUEL-DIESEL' then 32000
+                  when 'FUEL-REGULAR' then 21000
+                  else 8500
+                end,
+                true,
+                now(),
+                now()
+              from (
+                select id from stations
+                where code in (
+                  'STN-00000001', 'STN-00000002', 'STN-00000003', 'STN-00000004',
+                  'STN-00000005', 'STN-00000006', 'STN-00000007', 'STN-00000008',
+                  'STN-00000009', 'STN-00000010', 'STN-00000011', 'STN-00000012'
+                )
+                order by id
+                limit 12
+              ) s
+              cross join products p
+              where p.sku in ('FUEL-DIESEL', 'FUEL-REGULAR', 'FUEL-PREMIUM')
+              and not exists (
+                select 1 from tanks t where t.station_id = s.id and t.product_id = p.id
+              );

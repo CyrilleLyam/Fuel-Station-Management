@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - changeSet:
+      id: 007-seed-stations
+      author: dev
+      validCheckSum: ANY
+      changes:
+        - sql:
+            sql: >
+              insert into stations (name, code, address, phone, latitude, longitude, enabled, created_at, updated_at) values
+                ('Siem Reap Fuel Station 1', 'STN-00000001', '1 Siem Reap Road, Siem Reap', '091-214-125', 13.588667, 103.597927, true, now(), now()),
+                ('Battambang Fuel Station 2', 'STN-00000002', '2 Battambang Road, Battambang', '023-792-858', 13.095453, 103.202165, true, now(), now()),
+                ('Sihanoukville Fuel Station 3', 'STN-00000003', '3 Sihanoukville Road, Sihanoukville', '013-195-323', 10.627543, 103.522141, true, now(), now()),
+                ('Kampong Cham Fuel Station 4', 'STN-00000004', '4 Kampong Cham Road, Kampong Cham', '093-818-658', 11.992419, 105.463460, true, now(), now()),
+                ('Kampong Speu Fuel Station 5', 'STN-00000005', '5 Kampong Speu Road, Kampong Speu', '010-877-925', 11.453874, 104.520515, true, now(), now()),
+                ('Kampong Thom Fuel Station 6', 'STN-00000006', '6 Kampong Thom Road, Kampong Thom', '037-881-444', 12.711298, 104.888775, true, now(), now()),
+                ('Kampot Fuel Station 7', 'STN-00000007', '7 Kampot Road, Kampot', '054-718-370', 10.593286, 104.164325, true, now(), now()),
+                ('Kandal Fuel Station 8', 'STN-00000008', '8 Kandal Road, Kandal', '058-180-665', 11.482095, 104.943559, true, now(), now()),
+                ('Kratie Fuel Station 9', 'STN-00000009', '9 Kratie Road, Kratie', '056-691-296', 12.488715, 106.018616, true, now(), now()),
+                ('Prey Veng Fuel Station 10', 'STN-00000010', '10 Prey Veng Road, Prey Veng', '047-181-975', 11.484931, 105.325485, true, now(), now()),
+                ('Pursat Fuel Station 11', 'STN-00000011', '11 Pursat Road, Pursat', '091-954-473', 12.532737, 103.918487, true, now(), now()),
+                ('Phnom Penh Fuel Station 12', 'STN-00000012', '12 Monivong Blvd, Phnom Penh', '099-799-763', 11.556374, 104.928207, true, now(), now())
+              on conflict (code) do nothing;

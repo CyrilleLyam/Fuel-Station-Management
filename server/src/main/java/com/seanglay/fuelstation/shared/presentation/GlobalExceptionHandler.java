@@ -2,6 +2,7 @@ package com.seanglay.fuelstation.shared.presentation;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -32,6 +33,16 @@ class GlobalExceptionHandler {
 	@ExceptionHandler(UnauthorizedException.class)
 	ResponseEntity<ApiResponse<Void>> handleUnauthorized(UnauthorizedException ex) {
 		return status(HttpStatus.UNAUTHORIZED, ex.getMessage());
+	}
+
+	@ExceptionHandler({ IllegalArgumentException.class, IllegalStateException.class })
+	ResponseEntity<ApiResponse<Void>> handleInvalidOperation(RuntimeException ex) {
+		return status(HttpStatus.BAD_REQUEST, ex.getMessage());
+	}
+
+	@ExceptionHandler(DataIntegrityViolationException.class)
+	ResponseEntity<ApiResponse<Void>> handleDataIntegrity(DataIntegrityViolationException ex) {
+		return status(HttpStatus.CONFLICT, "Request violates a data constraint");
 	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
