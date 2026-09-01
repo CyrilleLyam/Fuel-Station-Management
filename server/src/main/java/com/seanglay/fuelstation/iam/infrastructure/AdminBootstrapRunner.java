@@ -18,6 +18,12 @@ class AdminBootstrapRunner implements ApplicationRunner {
 
 	private static final String ADMIN_ROLE = "ADMIN";
 
+	private static final String ATTENDANT_ROLE = "ATTENDANT";
+
+	private static final String[] MANAGED_RESOURCES = { "station", "product", "tank", "sale" };
+
+	private static final String[] DERIVED_RESOURCES = { "accounting", "report" };
+
 	private final UserRepository userRepository;
 
 	private final CreateUserUseCase createUserUseCase;
@@ -47,7 +53,7 @@ class AdminBootstrapRunner implements ApplicationRunner {
 
 		policyEnforcer.grantPermissionToRole(ADMIN_ROLE, "iam", "admin");
 
-		for (String resource : new String[] { "station", "product", "tank" }) {
+		for (String resource : MANAGED_RESOURCES) {
 			policyEnforcer.grantPermissionToRole(ADMIN_ROLE, resource, "create");
 			policyEnforcer.grantPermissionToRole(ADMIN_ROLE, resource, "read");
 			policyEnforcer.grantPermissionToRole(ADMIN_ROLE, resource, "update");
@@ -59,6 +65,17 @@ class AdminBootstrapRunner implements ApplicationRunner {
 
 			policyEnforcer.grantPermissionToRole("VIEWER", resource, "read");
 		}
+
+		for (String resource : DERIVED_RESOURCES) {
+			policyEnforcer.grantPermissionToRole(ADMIN_ROLE, resource, "read");
+			policyEnforcer.grantPermissionToRole("MANAGER", resource, "read");
+			policyEnforcer.grantPermissionToRole("VIEWER", resource, "read");
+		}
+
+		policyEnforcer.grantPermissionToRole(ATTENDANT_ROLE, "sale", "create");
+		policyEnforcer.grantPermissionToRole(ATTENDANT_ROLE, "sale", "read");
+		policyEnforcer.grantPermissionToRole(ATTENDANT_ROLE, "product", "read");
+		policyEnforcer.grantPermissionToRole(ATTENDANT_ROLE, "tank", "read");
 	}
 
 }

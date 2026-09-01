@@ -27,6 +27,11 @@ class TankRepositoryImpl implements TankRepository {
 	}
 
 	@Override
+	public Optional<Tank> findByIdForUpdate(Long id) {
+		return jpaRepository.findByIdForUpdate(id);
+	}
+
+	@Override
 	public PageResult<Tank> search(Long stationId, String keyword, int page, int size) {
 		String term = keyword == null ? "" : keyword;
 		Page<Tank> result = jpaRepository.search(stationId, term, PageRequest.of(page, size));

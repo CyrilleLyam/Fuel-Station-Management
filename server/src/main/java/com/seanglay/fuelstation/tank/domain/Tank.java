@@ -113,6 +113,19 @@ public class Tank extends AggregateRoot<Long> {
 		this.currentQuantity = next;
 	}
 
+	public BigDecimal recordSale(BigDecimal amount) {
+		BigDecimal sold = requirePositive(amount);
+
+		if (sold.compareTo(currentQuantity) > 0) {
+			BigDecimal shortfall = sold.subtract(currentQuantity);
+			this.currentQuantity = BigDecimal.ZERO;
+			return shortfall;
+		}
+
+		this.currentQuantity = currentQuantity.subtract(sold);
+		return BigDecimal.ZERO;
+	}
+
 	public void recordDispense(BigDecimal amount) {
 		BigDecimal dispensed = requirePositive(amount);
 		BigDecimal next = currentQuantity.subtract(dispensed);

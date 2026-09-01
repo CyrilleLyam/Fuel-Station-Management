@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 009-widen-event-publication-payload
+      author: dev
+      changes:
+        - sql:
+            sql: alter table event_publication alter column serialized_event type text;
+        - sql:
+            sql: create index if not exists idx_event_publication_incomplete on event_publication (listener_id) where completion_date is null;

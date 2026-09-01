@@ -9,6 +9,8 @@ public interface TankRepository {
 
 	Optional<Tank> findById(Long id);
 
+	Optional<Tank> findByIdForUpdate(Long id);
+
 	PageResult<Tank> search(Long stationId, String keyword, int page, int size);
 
 	CursorPageResult<Tank> searchAfter(Long stationId, String keyword, Long cursor, int size);
