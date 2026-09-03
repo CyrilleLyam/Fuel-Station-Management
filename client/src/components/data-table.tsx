@@ -8,31 +8,32 @@ import {
   type SortingState,
 } from "@tanstack/react-table";
 import { ArrowDown, ArrowUp, ArrowUpDown, Loader2 } from "lucide-react";
-import { useTranslation } from "react-i18next";
-import type { Station } from "../types/station";
 
-export function StationsTable({
+export function DataTable<TData>({
   data,
   columns,
   isLoading,
+  emptyMessage,
   sorting,
   onSortingChange,
+  getRowId,
 }: {
-  data: Station[];
-  columns: ColumnDef<Station, any>[];
-  isLoading: boolean;
-  sorting: SortingState;
-  onSortingChange: OnChangeFn<SortingState>;
+  data: TData[];
+  columns: ColumnDef<TData, any>[];
+  isLoading?: boolean;
+  emptyMessage: string;
+  sorting?: SortingState;
+  onSortingChange?: OnChangeFn<SortingState>;
+  getRowId?: (row: TData, index: number) => string;
 }) {
-  const { t } = useTranslation();
   const table = useReactTable({
     data,
     columns,
-    state: { sorting },
+    state: sorting ? { sorting } : undefined,
     onSortingChange,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    getRowId: (row) => String(row.id),
+    getRowId: getRowId ?? ((_, index) => String(index)),
   });
 
   return (
@@ -93,7 +94,7 @@ export function StationsTable({
                 colSpan={columns.length}
                 className="px-4 py-10 text-center text-muted-foreground"
               >
-                {t("stations.noResults")}
+                {emptyMessage}
               </td>
             </tr>
           )}

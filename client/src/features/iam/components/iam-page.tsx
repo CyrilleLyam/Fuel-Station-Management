@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ShieldAlert } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { cn } from "@/lib/utils";
+import { TabNav } from "@/components/tab-nav";
 import { usePermissions } from "../permissions/use-permissions";
 import { RolesPanel } from "./roles-panel";
 import { UsersPanel } from "./users-panel";
@@ -41,23 +41,7 @@ export function IamPage() {
         <p className="text-sm text-muted-foreground">{t("iam.subtitle")}</p>
       </div>
 
-      <div className="flex gap-1 border-b border-border">
-        {tabs.map((item) => (
-          <button
-            key={item.id}
-            type="button"
-            onClick={() => setTab(item.id)}
-            className={cn(
-              "-mb-px border-b-2 px-3 py-2 text-sm font-medium transition-colors",
-              tab === item.id
-                ? "border-primary text-foreground"
-                : "border-transparent text-muted-foreground hover:text-foreground",
-            )}
-          >
-            {item.label}
-          </button>
-        ))}
-      </div>
+      <TabNav tabs={tabs} active={tab} onChange={setTab} />
 
       {tab === "users" ? <UsersPanel /> : <RolesPanel />}
     </main>

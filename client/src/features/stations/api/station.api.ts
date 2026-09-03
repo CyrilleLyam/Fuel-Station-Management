@@ -26,6 +26,11 @@ export async function listStations(
   return { content: data.data, meta: data.meta! };
 }
 
+export async function getStation(id: number): Promise<Station> {
+  const { data } = await api.get<ApiResponse<Station>>(`/stations/${id}`);
+  return data.data;
+}
+
 export async function createStation(input: StationInput): Promise<Station> {
   const { data } = await api.post<ApiResponse<Station>>("/stations", input);
   return data.data;

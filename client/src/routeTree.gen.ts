@@ -12,8 +12,13 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated.index'
+import { Route as AuthenticatedAccountingRouteImport } from './routes/_authenticated.accounting'
 import { Route as AuthenticatedIamRouteImport } from './routes/_authenticated.iam'
+import { Route as AuthenticatedProductsRouteImport } from './routes/_authenticated.products'
+import { Route as AuthenticatedReportsRouteImport } from './routes/_authenticated.reports'
+import { Route as AuthenticatedSalesRouteImport } from './routes/_authenticated.sales'
 import { Route as AuthenticatedStationsRouteImport } from './routes/_authenticated.stations'
+import { Route as AuthenticatedTanksRouteImport } from './routes/_authenticated.tanks'
 
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
   id: '/_authenticated',
@@ -29,9 +34,29 @@ const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedAccountingRoute = AuthenticatedAccountingRouteImport.update({
+  id: '/accounting',
+  path: '/accounting',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedIamRoute = AuthenticatedIamRouteImport.update({
   id: '/iam',
   path: '/iam',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedProductsRoute = AuthenticatedProductsRouteImport.update({
+  id: '/products',
+  path: '/products',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedReportsRoute = AuthenticatedReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedSalesRoute = AuthenticatedSalesRouteImport.update({
+  id: '/sales',
+  path: '/sales',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedStationsRoute = AuthenticatedStationsRouteImport.update({
@@ -39,38 +64,81 @@ const AuthenticatedStationsRoute = AuthenticatedStationsRouteImport.update({
   path: '/stations',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedTanksRoute = AuthenticatedTanksRouteImport.update({
+  id: '/tanks',
+  path: '/tanks',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
   '/login': typeof LoginRoute
+  '/accounting': typeof AuthenticatedAccountingRoute
   '/iam': typeof AuthenticatedIamRoute
+  '/products': typeof AuthenticatedProductsRoute
+  '/reports': typeof AuthenticatedReportsRoute
+  '/sales': typeof AuthenticatedSalesRoute
   '/stations': typeof AuthenticatedStationsRoute
+  '/tanks': typeof AuthenticatedTanksRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
+  '/accounting': typeof AuthenticatedAccountingRoute
   '/iam': typeof AuthenticatedIamRoute
+  '/products': typeof AuthenticatedProductsRoute
+  '/reports': typeof AuthenticatedReportsRoute
+  '/sales': typeof AuthenticatedSalesRoute
   '/stations': typeof AuthenticatedStationsRoute
+  '/tanks': typeof AuthenticatedTanksRoute
   '/': typeof AuthenticatedIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/login': typeof LoginRoute
+  '/_authenticated/accounting': typeof AuthenticatedAccountingRoute
   '/_authenticated/iam': typeof AuthenticatedIamRoute
+  '/_authenticated/products': typeof AuthenticatedProductsRoute
+  '/_authenticated/reports': typeof AuthenticatedReportsRoute
+  '/_authenticated/sales': typeof AuthenticatedSalesRoute
   '/_authenticated/stations': typeof AuthenticatedStationsRoute
+  '/_authenticated/tanks': typeof AuthenticatedTanksRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/iam' | '/stations'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/accounting'
+    | '/iam'
+    | '/products'
+    | '/reports'
+    | '/sales'
+    | '/stations'
+    | '/tanks'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/iam' | '/stations' | '/'
+  to:
+    | '/login'
+    | '/accounting'
+    | '/iam'
+    | '/products'
+    | '/reports'
+    | '/sales'
+    | '/stations'
+    | '/tanks'
+    | '/'
   id:
     | '__root__'
     | '/_authenticated'
     | '/login'
+    | '/_authenticated/accounting'
     | '/_authenticated/iam'
+    | '/_authenticated/products'
+    | '/_authenticated/reports'
+    | '/_authenticated/sales'
     | '/_authenticated/stations'
+    | '/_authenticated/tanks'
     | '/_authenticated/'
   fileRoutesById: FileRoutesById
 }
@@ -102,11 +170,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/accounting': {
+      id: '/_authenticated/accounting'
+      path: '/accounting'
+      fullPath: '/accounting'
+      preLoaderRoute: typeof AuthenticatedAccountingRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/iam': {
       id: '/_authenticated/iam'
       path: '/iam'
       fullPath: '/iam'
       preLoaderRoute: typeof AuthenticatedIamRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/products': {
+      id: '/_authenticated/products'
+      path: '/products'
+      fullPath: '/products'
+      preLoaderRoute: typeof AuthenticatedProductsRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/reports': {
+      id: '/_authenticated/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof AuthenticatedReportsRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/sales': {
+      id: '/_authenticated/sales'
+      path: '/sales'
+      fullPath: '/sales'
+      preLoaderRoute: typeof AuthenticatedSalesRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/stations': {
@@ -116,18 +212,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedStationsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/tanks': {
+      id: '/_authenticated/tanks'
+      path: '/tanks'
+      fullPath: '/tanks'
+      preLoaderRoute: typeof AuthenticatedTanksRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
   }
 }
 
 interface AuthenticatedRouteChildren {
+  AuthenticatedAccountingRoute: typeof AuthenticatedAccountingRoute
   AuthenticatedIamRoute: typeof AuthenticatedIamRoute
+  AuthenticatedProductsRoute: typeof AuthenticatedProductsRoute
+  AuthenticatedReportsRoute: typeof AuthenticatedReportsRoute
+  AuthenticatedSalesRoute: typeof AuthenticatedSalesRoute
   AuthenticatedStationsRoute: typeof AuthenticatedStationsRoute
+  AuthenticatedTanksRoute: typeof AuthenticatedTanksRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedAccountingRoute: AuthenticatedAccountingRoute,
   AuthenticatedIamRoute: AuthenticatedIamRoute,
+  AuthenticatedProductsRoute: AuthenticatedProductsRoute,
+  AuthenticatedReportsRoute: AuthenticatedReportsRoute,
+  AuthenticatedSalesRoute: AuthenticatedSalesRoute,
   AuthenticatedStationsRoute: AuthenticatedStationsRoute,
+  AuthenticatedTanksRoute: AuthenticatedTanksRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
 }
 

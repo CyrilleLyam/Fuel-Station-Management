@@ -8,3 +8,12 @@ export function useStations(params: ListStationsParams) {
     placeholderData: keepPreviousData,
   });
 }
+
+export function useStationOptions() {
+  return useQuery({
+    queryKey: ["stations", { size: 200 }],
+    queryFn: () => listStations({ size: 200 }),
+    select: (page) => page.content,
+    staleTime: 5 * 60 * 1000,
+  });
+}

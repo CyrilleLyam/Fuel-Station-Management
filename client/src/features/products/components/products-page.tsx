@@ -11,38 +11,40 @@ import { Input } from "@/components/ui/input";
 import { getErrorMessage } from "@/features/auth/lib/get-error-message";
 import { usePermissions } from "@/features/iam/permissions/use-permissions";
 import { useDebouncedValue } from "@/lib/use-debounced-value";
+import { createProductColumns } from "./product-columns";
+import { ProductDialog } from "./product-dialog";
+import { ProductPriceDialog } from "./product-price-dialog";
 import {
-  useDeleteStation,
-  useUpdateStation,
-} from "../hooks/use-station-mutations";
-import { useStations } from "../hooks/use-stations";
-import { createStationColumns } from "./station-columns";
-import { StationDialog } from "./station-dialog";
-import type { Station } from "../types/station";
+  useDeleteProduct,
+  useUpdateProduct,
+} from "../hooks/use-product-mutations";
+import { useProducts } from "../hooks/use-products";
+import type { Product } from "../types/product";
 
 const PAGE_SIZE = 10;
 
-export function StationsPage() {
+export function ProductsPage() {
   const { t } = useTranslation();
   const { can } = usePermissions();
-  const canCreate = can("station", "create");
-  const canUpdate = can("station", "update");
-  const canDelete = can("station", "delete");
+  const canCreate = can("product", "create");
+  const canUpdate = can("product", "update");
+  const canDelete = can("product", "delete");
   const [page, setPage] = useState(0);
   const [search, setSearch] = useState("");
   const [sorting, setSorting] = useState<SortingState>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [editingStation, setEditingStation] = useState<Station | undefined>();
+  const [priceOpen, setPriceOpen] = useState(false);
+  const [selected, setSelected] = useState<Product | undefined>();
 
   const keyword = useDebouncedValue(search.trim(), 300);
 
-  const { data, isLoading, isError, error, isFetching } = useStations({
+  const { data, isLoading, isError, error, isFetching } = useProducts({
     keyword,
     page,
     size: PAGE_SIZE,
   });
-  const updateStation = useUpdateStation();
-  const deleteStation = useDeleteStation();
+  const updateProduct = useUpdateProduct();
+  const deleteProduct = useDeleteProduct();
 
   function handleSearchChange(value: string) {
     setSearch(value);
@@ -50,39 +52,42 @@ export function StationsPage() {
   }
 
   function openCreate() {
-    setEditingStation(undefined);
+    setSelected(undefined);
     setDialogOpen(true);
   }
 
-  function openEdit(station: Station) {
-    setEditingStation(station);
+  function openEdit(product: Product) {
+    setSelected(product);
     setDialogOpen(true);
   }
 
-  function toggleEnabled(station: Station) {
-    updateStation.mutate({
-      id: station.id,
+  function openPrice(product: Product) {
+    setSelected(product);
+    setPriceOpen(true);
+  }
+
+  function toggleActive(product: Product) {
+    updateProduct.mutate({
+      id: product.id,
       input: {
-        name: station.name,
-        code: station.code,
-        address: station.address ?? "",
-        phone: station.phone ?? "",
-        latitude: station.latitude ?? undefined,
-        longitude: station.longitude ?? undefined,
-        enabled: !station.enabled,
+        name: product.name,
+        fuelType: product.fuelType,
+        unit: product.unit,
+        active: !product.active,
       },
     });
   }
 
-  function remove(station: Station) {
-    if (confirm(t("stations.deleteConfirm", { name: station.name }))) {
-      deleteStation.mutate(station.id);
+  function remove(product: Product) {
+    if (confirm(t("products.deleteConfirm", { name: product.name }))) {
+      deleteProduct.mutate(product.id);
     }
   }
 
-  const columns = createStationColumns(t, {
+  const columns = createProductColumns(t, {
     onEdit: openEdit,
-    onToggleEnabled: toggleEnabled,
+    onChangePrice: openPrice,
+    onToggleActive: toggleActive,
     onDelete: remove,
     canUpdate,
     canDelete,
@@ -91,13 +96,13 @@ export function StationsPage() {
   return (
     <main className="flex flex-1 flex-col gap-6 p-6">
       <PageHeader
-        title={t("stations.title")}
-        subtitle={t("stations.subtitle")}
+        title={t("products.title")}
+        subtitle={t("products.subtitle")}
         actions={
           canCreate && (
             <Button onClick={openCreate} className="gap-1.5">
               <Plus className="size-4" />
-              {t("stations.addStation")}
+              {t("products.addProduct")}
             </Button>
           )
         }
@@ -108,7 +113,7 @@ export function StationsPage() {
         <Input
           value={search}
           onChange={(event) => handleSearchChange(event.target.value)}
-          placeholder={t("stations.searchPlaceholder")}
+          placeholder={t("products.searchPlaceholder")}
           className="pl-8"
         />
       </div>
@@ -123,7 +128,7 @@ export function StationsPage() {
         data={data?.content ?? []}
         columns={columns}
         isLoading={isLoading}
-        emptyMessage={t("stations.noResults")}
+        emptyMessage={t("products.noResults")}
         sorting={sorting}
         onSortingChange={setSorting}
         getRowId={(row) => String(row.id)}
@@ -133,17 +138,22 @@ export function StationsPage() {
         <PaginationBar
           meta={data.meta}
           isFetching={isFetching}
-          countLabel={t("stations.stationCount", {
+          countLabel={t("products.productCount", {
             count: data.meta.totalElements,
           })}
           onPageChange={setPage}
         />
       )}
 
-      <StationDialog
-        station={editingStation}
+      <ProductDialog
+        product={selected}
         open={dialogOpen}
         onOpenChange={setDialogOpen}
+      />
+      <ProductPriceDialog
+        product={selected}
+        open={priceOpen}
+        onOpenChange={setPriceOpen}
       />
     </main>
   );
